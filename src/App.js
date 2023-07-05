@@ -58,6 +58,16 @@ export default function App() {
         <NumResults movies={movies} />
       </NavBar>
       <Main>
+        {/*  explicit props */}
+        {/* <Box element={<MovieList movies={movies} />} />
+        <Box
+          element={
+            <>
+              <WatchedSummary watched={watched} />
+              <WatchedMovieList watched={watched} />
+            </>
+          }
+        /> */}
         <Box>
           <MovieList movies={movies} />
         </Box>
