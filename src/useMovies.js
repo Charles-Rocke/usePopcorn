@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 const KEY = "b76807dc";
 
-function useMovie(query, callback) {
+function useMovie(query) {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -10,7 +10,7 @@ function useMovie(query, callback) {
     function () {
       // callback function will be called if it exists
       // close movie on search
-      callback?.();
+      //   callback?.();
       const controller = new AbortController();
       async function fetchMovies() {
         // loading is happening on mount
