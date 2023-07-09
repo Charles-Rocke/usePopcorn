@@ -1,17 +1,15 @@
 import { useState, useEffect, useRef } from "react";
 import StarRating from "./StarRating";
+import useMovies from "./useMovies";
 
 const KEY = "b76807dc";
 
 export default function App() {
   /* States */
-  const [movies, setMovies] = useState([]);
-
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState(null);
   // const [watched, setWatched] = useState([]);
+  const { movies, isLoading, error } = useMovies(query, handleCloseMovie);
 
   // retrieving the saved watched even after reload
   const [watched, setWatched] = useState(function () {
@@ -45,60 +43,6 @@ export default function App() {
     },
     [watched]
   );
-
-  useEffect(
-    function () {
-      const controller = new AbortController();
-      async function fetchMovies() {
-        // loading is happening on mount
-        try {
-          setIsLoading(true);
-          setError("");
-          // get movie data on initial instance
-          const res = await fetch(
-            `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
-            { signal: controller.signal }
-          );
-
-          // incase a user loses internet connection
-          if (!res.ok)
-            throw new Error("Something went wrong fetching movie data ");
-          const data = await res.json();
-          // if a movcie is not found in search
-          if (data.Response === "False") throw new Error("Movie not found");
-
-          setMovies(data.Search);
-          // set error here again for resetting error
-          setError("");
-        } catch (err) {
-          // console.log(err.message);
-
-          if (err.name !== "AbortError") {
-            setError(err.message);
-          }
-          setError(err.message);
-        } finally {
-          setIsLoading(false);
-        }
-      }
-      if (query.length < 3) {
-        setMovies([]);
-        setError("");
-        return;
-      }
-
-      // close movie on search
-      handleCloseMovie();
-
-      fetchMovies();
-
-      // cleanup function
-      return function () {
-        controller.abort();
-      };
-    },
-    [query]
-  ); // add a dependency array (only runs on first Mount)
 
   return (
     <>
